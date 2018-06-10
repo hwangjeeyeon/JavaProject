@@ -1,30 +1,74 @@
 package view;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.ToolTipManager;
 
-public class ToolBar extends JToolBar{
-	
-	ToolBar() {
-		//tb.setFloatable(false);
-		
-		ToolTipManager m = ToolTipManager.sharedInstance();
-		m.setInitialDelay(0);
-		
-		JButton new_bt = new JButton("new");
-		new_bt.setToolTipText("货肺款 颇老 积己");
-		
-		ImageIcon save = new ImageIcon("image/历厘.png");
-		JButton save_bt = new JButton(save);
-		save_bt.setToolTipText("历厘");
-		
-		this.add(new_bt);
-		this.add(save_bt);
-	}
-	
-	JToolBar getToolBar() {
-		return this;
-	}
+import model.NodeFormat;
+import model.PaneInfo;
+import controller.FileOpenEvent;
+import controller.FileSaveEvent;
+import controller.HelpEvent;
+
+public class ToolBar{
+
+   NodeFormat node;
+   JToolBar toolBar = new JToolBar();
+   ToolBar(NodeFormat a,JSplitPane pane,PaneInfo[] panel,AttributePane attr,TextField text) {
+      
+      node = a;
+      ToolTipManager m = ToolTipManager.sharedInstance();
+      m.setInitialDelay(0);
+      
+      JButton new_bt = new JButton("new");
+      new_bt.setToolTipText("货肺款 颇老 积己");
+      
+      ImageIcon save = new ImageIcon("image/历厘.png");
+      JButton save_bt = new JButton(save);
+      save_bt.setToolTipText("历厘");
+      
+      JButton open_bt = new JButton("open");
+      open_bt.setToolTipText("凯扁");
+      
+      JButton help_bt = new JButton("help");
+      help_bt.setToolTipText("档框富");
+      
+      JButton exit_bt = new JButton("exit");
+      exit_bt.setToolTipText("辆丰");
+      
+      FileSaveEvent saver = new FileSaveEvent(node);
+      new_bt.addMouseListener(new MakeNew());
+      save_bt.addMouseListener(saver);
+      open_bt.addActionListener(new FileOpenEvent(node,pane,panel,attr,text));
+      help_bt.addMouseListener(new HelpEvent());
+      exit_bt.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			System.exit(0);
+		}
+      });
+      
+      toolBar.add(new_bt);
+      toolBar.add(save_bt);
+      toolBar.add(open_bt);
+      toolBar.add(help_bt);
+      toolBar.add(exit_bt);
+   }
+   
+   private class MakeNew extends MouseAdapter{
+      public void mousePressed(MouseEvent e) {
+         new Frame();
+      }
+   }
+   
+   JToolBar getToolBar() {
+      return toolBar;
+   }
 }
